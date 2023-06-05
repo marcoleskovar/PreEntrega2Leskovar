@@ -44,7 +44,7 @@ const QueCantidad = (respuestaQueProductos) =>{
         const Prod =  respuestaQueProductos[rep]
         let ingreseCantidad = 0
         while (isNaN(ingreseCantidad) || (ingreseCantidad)<=0){     //Mientras que ingreseCantidad sea isNaN o <= 0, que la condicion sea true y se ejecute el while
-            ingreseCantidad = parseFloat(prompt('Que cantidad de ' + Prod.NombreProducto + 's quiere?\nPrecio por unidad: $' + Prod.Precio + '\n\nProductos Pedidos:\n' + lista))
+            ingreseCantidad = parseInt(prompt('Que cantidad de ' + Prod.NombreProducto + 's quiere?\nPrecio por unidad: $' + Prod.Precio + '\n\nProductos Pedidos:\n' + lista))
             if (isNaN(ingreseCantidad) || (ingreseCantidad)<=0){        //Por eso cuando ingresas un valor isNaN o <= 0 la condicion es true por eso te manda la alerta y vuelve a iniciar el ciclo hasta que ingreses algo distinto de isNaN o 0
                 alert (ingreseCantidad + ' no es un numero valido. Reingrese')
             }
@@ -72,12 +72,11 @@ const QuePrecio = (respuestaQueCantidad) =>{
     let precioDescuento= ((sumaPrecios2 * 0.9) * ( 1 + (IVA /100)))
     let precioIVA= (sumaPrecios2 * ( 1 + (IVA /100)))
     if (sumaPrecios2 >=10000){       //Si tu compra es mayor a 10.000 te descuenta el 10% sino solo te lo deja el precio bruto + IVA
-        alert('Su total menos 10% + IVA es de: $' + precioDescuento + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + lista2)
-        salida.push ({PrecioFinal: precioDescuento})
+        alert('Su total menos 10% + IVA es de: $' + (Math.round(precioDescuento)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + lista2)
+        salida.push ({PrecioFinal: (Math.round(precioDescuento))})
     }else{
-        alert('Su total + IVA es de: $' + (Math.floor(precioIVA)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + lista2)
-        salida.push ({PrecioFinal: (Math.floor(precioIVA))})
-        return salida
+        alert('Su total + IVA es de: $' + (Math.round(precioIVA)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + lista2)
+        salida.push ({PrecioFinal:(Math.round(precioIVA))})
     }
     return salida
 }
