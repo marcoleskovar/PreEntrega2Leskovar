@@ -5,45 +5,36 @@
 //Alerta de precio final
 
 //1-Creo los productos
-class Productos{
-    constructor(nombreProd, precioProd){
-        this.nombre = nombreProd;
-        this.precio = precioProd;
-    }
-}
-let prodA = new Productos ('buzo', 2500)
-let prodB = new Productos ('remera', 1100)
-let prodC = new Productos ('campera', 2200)
+const Productos = [
+    {Producto: 'A', NombreProducto: 'Buzo', Precio: 2500},
+    {Producto: 'B', NombreProducto: 'Remera', Precio: 1100},
+    {Producto: 'C', NombreProducto: 'Campera', Precio: 2200}
+]
 const IVA = 21
 
 //2-Cuales de estos productos va a querer
 const QueProducto = () =>{
+    let resultado1;
     while(true){
-        let productos = []
-        let inserteProducto = prompt('Cuales de estos productos vas a querer?\n\n-Buzo (A)\n-Remera (B)\n-Campera (C)\n\nEjemplo:\nSi quiero buzos y camperas escribo "AC"').toUpperCase();
-        if (inserteProducto == 'A'){
-            productos.push (prodA)
-        }else if (inserteProducto == 'B'){
-            productos.push (prodB)
-        }else if (inserteProducto == 'C'){
-            productos.push (prodC)
-        }else if (inserteProducto == 'AB' || inserteProducto == 'BA'){
-            productos.push (prodA, prodB)
-        }else if (inserteProducto == 'AC' || inserteProducto == 'CA'){
-            productos.push (prodA, prodC)
-        }else if (inserteProducto == 'BC' || inserteProducto == 'CB'){
-            productos.push (prodB, prodC)
-        }else if (inserteProducto == 'ABC' || inserteProducto == 'ACB' || inserteProducto == 'BAC' || inserteProducto == 'BCA' || inserteProducto == 'CAB' || inserteProducto == 'CBA'){
-            productos.push (prodA, prodB, prodC)
-        }else{
-            alert ('"' + inserteProducto + '" no es valido. Reingrese')
-            continue
+        let IngreseProductos = prompt('Cuales de estos productos vas a querer?\n\n-Buzo (A)\n-Remera (B)\n-Campera (C)\n\nEjemplo:\nSi quiero buzos y camperas escribo "AC"').toUpperCase();
+        let valido = true
+        for (let i = 0; i<IngreseProductos.length; i++){
+            if (!['A', 'B', 'C'].includes(IngreseProductos[i])){
+                valido = false;
+                break
+            }
         }
-        return productos
+        if (valido){
+            resultado1 = Productos.filter(elemento => IngreseProductos.includes(elemento.Producto))
+            break
+        }else{
+            alert('"' + IngreseProductos + '" no es valido, reingrese')
+        }
     }
+    return resultado1   
 }
-const respuestaQueProductos = QueProducto();
-console.log(respuestaQueProductos);
+let respuestaQueProductos = QueProducto()
+console.log(respuestaQueProductos)
 
 //3-Preguntar cantidades
 const QueCantidad = (respuestaQueProductos) =>{
@@ -53,14 +44,14 @@ const QueCantidad = (respuestaQueProductos) =>{
         const Prod =  respuestaQueProductos[rep]
         let ingreseCantidad = 0
         while (isNaN(ingreseCantidad) || (ingreseCantidad)<=0){     //Mientras que ingreseCantidad sea isNaN o <= 0, que la condicion sea true y se ejecute el while
-            ingreseCantidad = parseFloat(prompt('Que cantidad de ' + Prod.nombre + 's quiere?\nPrecio por unidad: $' + Prod.precio + '\n\nProductos Pedidos:\n' + lista))
+            ingreseCantidad = parseFloat(prompt('Que cantidad de ' + Prod.NombreProducto + 's quiere?\nPrecio por unidad: $' + Prod.Precio + '\n\nProductos Pedidos:\n' + lista))
             if (isNaN(ingreseCantidad) || (ingreseCantidad)<=0){        //Por eso cuando ingresas un valor isNaN o <= 0 la condicion es true por eso te manda la alerta y vuelve a iniciar el ciclo hasta que ingreses algo distinto de isNaN o 0
                 alert (ingreseCantidad + ' no es un numero valido. Reingrese')
             }
         }
-        let precioPorCantidad = ingreseCantidad * Prod.precio       //Multiplica la cantidad que elegiste por sus respectivos precios
-        lista += Prod.nombre + ': $' + (precioPorCantidad) + '\n'       //Crea una lista que te va diciendo cuanto te esta costando
-        salida.push({Producto: Prod.nombre, Cantidad: ingreseCantidad, PrecioPorUnidad: Prod.precio, PrecioTotal: precioPorCantidad})       //Pushea en un array los objetos que vos hayas ingresado
+        let precioPorCantidad = ingreseCantidad * Prod.Precio       //Multiplica la cantidad que elegiste por sus respectivos precios
+        lista += Prod.NombreProducto + ': $' + (precioPorCantidad) + '\n'       //Crea una lista que te va diciendo cuanto te esta costando
+        salida.push({Producto: Prod.NombreProducto, Cantidad: ingreseCantidad, PrecioPorUnidad: Prod.Precio, PrecioTotal: precioPorCantidad})       //Pushea en un array los objetos que vos hayas ingresado
     }
     return salida
 }
@@ -81,11 +72,11 @@ const QuePrecio = (respuestaQueCantidad) =>{
     let precioDescuento= ((sumaPrecios2 * 0.9) * ( 1 + (IVA /100)))
     let precioIVA= (sumaPrecios2 * ( 1 + (IVA /100)))
     if (sumaPrecios2 >=10000){       //Si tu compra es mayor a 10.000 te descuenta el 10% sino solo te lo deja el precio bruto + IVA
-        alert('Su compra supera los $10000 por eso tiene un descuento del 10%\n' + 'Su total menos 10% + IVA es de: $' + precioDescuento + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + lista2)
+        alert('Su total menos 10% + IVA es de: $' + precioDescuento + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + lista2)
         salida.push ({PrecioFinal: precioDescuento})
     }else{
-        alert('Su total + IVA es de: $' + precioIVA + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + lista2)
-        salida.push ({PrecioFinal: precioIVA})
+        alert('Su total + IVA es de: $' + (Math.floor(precioIVA)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + lista2)
+        salida.push ({PrecioFinal: (Math.floor(precioIVA))})
         return salida
     }
     return salida
