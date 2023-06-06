@@ -1,22 +1,19 @@
-//Que queres: buzo(A), campera(B), remera(C)
-//Recibe A, B, C / AB-BA, AC-CA, BC-CB / ABC
-//Cuanta cantidad queres de cada prenda (muestra el precio de la unidad)
-//Si sumas otro producto te va haciendo la lista de cuanto sale cada cosa
-//Alerta de precio final
-
-//1-Creo los productos
+//1-Creo los productos y algunas variables
 const Productos = [
     {Producto: 'A', NombreProducto: 'Buzo', Precio: 2500},
     {Producto: 'B', NombreProducto: 'Remera', Precio: 1100},
     {Producto: 'C', NombreProducto: 'Campera', Precio: 2200}
 ]
 const IVA = 21
+let precioIVA= (( 1 + (IVA /100)))
+const fechaActual = new Date()
+const horaActual= fechaActual.getHours()
 
 //2-Cuales de estos productos va a querer
 const QueProducto = () =>{
     let resultado1;
     while(true){
-        let IngreseProductos = prompt('Cuales de estos productos vas a querer?\n\n-Buzo (A)\n-Remera (B)\n-Campera (C)\n\nEjemplo:\nSi quiero buzos y camperas escribo "AC"').toUpperCase();
+        let IngreseProductos = prompt('Cuales de estos productos vas a querer?\n\n-Buzo (A)\n-Remera (B)\n-Campera (C)\n\nEjemplo:\nSi quiero buzos y camperas escribo "AC"\n' + '(Recuerde que si compra despues de las 18hs tiene descuento del 5%').toUpperCase();
         let valido = true
         for (let i = 0; i<IngreseProductos.length; i++){
             if (!['A', 'B', 'C'].includes(IngreseProductos[i])){
@@ -40,18 +37,18 @@ console.log(respuestaQueProductos)
 const QueCantidad = (respuestaQueProductos) =>{
     salida = []
     let lista = ''
-    for (let rep = 0; rep <respuestaQueProductos.length; rep++){        //Que se repita el ciclo en base al numero de elementos del array que dejo la funcion anterior
+    for (let rep = 0; rep <respuestaQueProductos.length; rep++){
         const Prod =  respuestaQueProductos[rep]
         let ingreseCantidad = 0
-        while (isNaN(ingreseCantidad) || (ingreseCantidad)<=0){     //Mientras que ingreseCantidad sea isNaN o <= 0, que la condicion sea true y se ejecute el while
-            ingreseCantidad = parseInt(prompt('Que cantidad de ' + Prod.NombreProducto + 's quiere?\nPrecio por unidad: $' + Prod.Precio + '\n\nProductos Pedidos:\n' + lista))
-            if (isNaN(ingreseCantidad) || (ingreseCantidad)<=0){        //Por eso cuando ingresas un valor isNaN o <= 0 la condicion es true por eso te manda la alerta y vuelve a iniciar el ciclo hasta que ingreses algo distinto de isNaN o 0
-                alert (ingreseCantidad + ' no es un numero valido. Reingrese')
+        while (isNaN(ingreseCantidad) || (ingreseCantidad)<=0){
+            ingreseCantidad = prompt('Que cantidad de ' + Prod.NombreProducto + 's quiere?\nPrecio por unidad: $' + Prod.Precio + '\n\nProductos Pedidos:\n' + lista)
+            if (isNaN(ingreseCantidad) || (ingreseCantidad)<=0){
+                alert ('"' + ingreseCantidad + '" no es un numero valido. Reingrese')
             }
         }
-        let precioPorCantidad = ingreseCantidad * Prod.Precio       //Multiplica la cantidad que elegiste por sus respectivos precios
-        lista += Prod.NombreProducto + ': $' + (precioPorCantidad) + '\n'       //Crea una lista que te va diciendo cuanto te esta costando
-        salida.push({Producto: Prod.NombreProducto, Cantidad: ingreseCantidad, PrecioPorUnidad: Prod.Precio, PrecioTotal: precioPorCantidad})       //Pushea en un array los objetos que vos hayas ingresado
+        let precioPorCantidad = ingreseCantidad * Prod.Precio
+        lista += Prod.NombreProducto + ': $' + (precioPorCantidad) + '\n'
+        salida.push({Producto: Prod.NombreProducto, Cantidad: ingreseCantidad, PrecioPorUnidad: Prod.Precio, PrecioTotal: precioPorCantidad})
     }
     return salida
 }
@@ -69,14 +66,21 @@ const QuePrecio = (respuestaQueCantidad) =>{
         lista2 += elemento.Producto + 's (' + elemento.Cantidad + '): $' + CantidadXPrecio + '\n'
         return acumulador + CantidadXPrecio
     } , 0)
-    let precioDescuento= ((sumaPrecios2 * 0.9) * ( 1 + (IVA /100)))
-    let precioIVA= (sumaPrecios2 * ( 1 + (IVA /100)))
-    if (sumaPrecios2 >=10000){       //Si tu compra es mayor a 10.000 te descuenta el 10% sino solo te lo deja el precio bruto + IVA
-        alert('Su total menos 10% + IVA es de: $' + (Math.round(precioDescuento)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + lista2)
-        salida.push ({PrecioFinal: (Math.round(precioDescuento))})
+    let precioDescuento= (sumaPrecios2 * 0.9)
+    let precioDescuentoHours = (sumaPrecios2 * 0.85)
+    let precioDescuentoHours2 = (sumaPrecios2 * 0.95)
+    if (horaActual>18 && sumaPrecios2 >= 10000){
+        alert('Su total menos 15% + IVA es de: $' + (Math.round(precioDescuentoHours * precioIVA)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + 'Lista de precios (cantidad por precio/unidad)\n' + lista2)
+        salida.push ({PrecioFinal: (Math.round(precioDescuentoHours * precioIVA))})
+    }else if (horaActual>18 && sumaPrecios2 < 10000){
+        alert('Su total menos el 5% + IVA es de: $' + (Math.round(precioDescuentoHours2 * precioIVA)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + 'Lista de precios (cantidad por precio/unidad)\n' + lista2)
+        salida.push ({PrecioFinal:(Math.round(precioDescuentoHours2 * precioIVA))})
+    }else if (horaActual<18 && sumaPrecios2 >= 10000){
+        alert('Su total menos 10% + IVA es de: $' + (Math.round(precioDescuento * precioIVA)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + 'Lista de precios (cantidad por precio/unidad)\n' + lista2)
+        salida.push ({PrecioFinal: (Math.round(precioDescuento * precioIVA))})
     }else{
-        alert('Su total + IVA es de: $' + (Math.round(precioIVA)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + lista2)
-        salida.push ({PrecioFinal:(Math.round(precioIVA))})
+        alert('Su total + IVA es de: $' + (Math.round(sumaPrecios2 * precioIVA)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + 'Lista de precios (cantidad por precio/unidad)\n' + lista2)
+        salida.push ({PrecioFinal:(Math.round(sumaPrecios2 * precioIVA))})
     }
     return salida
 }
