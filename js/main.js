@@ -69,10 +69,10 @@ const QuePrecio = (respuestaQueCantidad) =>{
     let precioDescuento= (sumaPrecios2 * 0.9)
     let precioDescuentoHours = (sumaPrecios2 * 0.85)
     let precioDescuentoHours2 = (sumaPrecios2 * 0.95)
-    if (horaActual>18 && sumaPrecios2 >= 10000){
+    if (horaActual>=18 && sumaPrecios2 >= 10000){
         alert('Su total menos 15% + IVA es de: $' + (Math.round(precioDescuentoHours * precioIVA)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + 'Lista de precios (cantidad por precio/unidad)\n' + lista2)
         salida.push ({PrecioFinal: (Math.round(precioDescuentoHours * precioIVA))})
-    }else if (horaActual>18 && sumaPrecios2 < 10000){
+    }else if (horaActual>=18 && sumaPrecios2 < 10000){
         alert('Su total menos el 5% + IVA es de: $' + (Math.round(precioDescuentoHours2 * precioIVA)) + '\n\n' + 'Lista de precios(unidad): \n'+ lista + '\n' + 'Lista de precios (cantidad por precio/unidad)\n' + lista2)
         salida.push ({PrecioFinal:(Math.round(precioDescuentoHours2 * precioIVA))})
     }else if (horaActual<18 && sumaPrecios2 >= 10000){
